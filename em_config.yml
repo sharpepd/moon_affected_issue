@@ -1,0 +1,22 @@
+python:
+  version: 3.12.3
+  venv:
+    path: ./.venv
+    requirements_file: requirements.txt
+    remotes:
+    - https://repo-manager.emea.zf-world.com/artifactory/api/pypi/adw_pypi_prod_local_frd/simple
+    - https://repo-manager.emea.zf-world.com/artifactory/api/pypi/adw_pypi_test_local_frd/simple
+    - https://repo-manager.azure.zf-world.com/artifactory/api/pypi/AZP-001_pypi_prod_local_azr/simple
+
+conan:
+  version: 2.3.1
+  artifactory_user: {{ env("ARTIFACTORY_USER")}}
+  secret: {{ env("ARTIFACTORY_PW")}}
+  paths:
+    user_home: .venv/.conan
+    download_cache: {{ env("EM_USER_HOME")}}/.conan2/p
+  configs:
+  - name: Div C Conan2 Config
+    location: https://repo-manager.emea.zf-world.com/artifactory/adwd_ci_public-generic-prod-local-frd/conan/config2.zip
+    type: url
+
