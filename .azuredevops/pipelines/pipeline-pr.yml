@@ -1,0 +1,64 @@
+# ------------------------------------------------------------------------------
+#
+#   ZF Friedrichshafen AG owns the copyright in this document and associated
+#   documents and all rights are reserved.  These documents must
+#   not be used for any purpose other than that for which they
+#   are supplied and must not be copied in whole or in part or
+#   disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#   Any copy of this drawing or document made by any method
+#   must also include a copy of this legend.
+#
+#   (C) ZF Friedrichshafen AG 2024
+#
+# ------------------------------------------------------------------------------
+---
+trigger: none
+
+parameters:
+  - name: dry_run
+    type: boolean
+    default: false
+  - name: staging
+    type: boolean
+    default: false
+
+
+resources:
+  repositories:
+    - repository: dpe-do
+      name: AZP-037_ADW_Tools/infr-dpe-do
+      type: git
+      ref: refs/heads/main
+
+variables:
+  - group: BuildUsers
+  - template: /apps/azpipelines/variable-moon.yml@dpe-do
+  - name: DPE_DRYRUN
+    value: ${{ parameters.dry_run }}
+  - name: DPE_STAGING
+    value: ${{ parameters.staging }}
+
+
+stages:
+  - stage: build
+    pool:
+      name: azp-037-software-factory-multicloud
+      demands:
+        - ZF_STARTFLEET_CONFIGURATION -equals openstack-mars-hco000100-windows
+    displayName: Build conan package
+    jobs:
+      - job: build
+        displayName: Build
+        steps:
+          - template: /apps/azpipelines/step-checkout-full.yml@dpe-do
+          - template: /apps/azpipelines/step-install-moon.yml@dpe-do
+
+          - script: moon run :conanCreate --summary --logFile build/logs/moon/build.log
+            displayName: "Perform the build tasks"
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+              INTEGRITY_PASSWORD: $(integrity_pw)
+              ARTIFACTORY_PW: $(ARTIFACTORY_PW)
+              build_database_token: $(build_database_token)
+
+          - template: /apps/azpipelines/step-snapshot-workspace.yml@dpe-do
