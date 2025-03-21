@@ -1,0 +1,55 @@
+# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
+# CENTRALLY MANAGED FILE.
+# ------------------------------------------------------------------------------
+#
+#   ZF Friedrichshafen AG owns the copyright in this document and associated
+#   documents and all rights are reserved.  These documents must
+#   not be used for any purpose other than that for which they
+#   are supplied and must not be copied in whole or in part or
+#   disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#   Any copy of this drawing or document made by any method
+#   must also include a copy of this legend.
+#
+#   (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+---
+$schema: "https://moonrepo.dev/schemas/tasks.json"
+tasks:
+  getStackAnalyzer:
+    command: "choco install"
+    args:
+      - "absint.stackanalyzer.2410"
+      - "-y"
+      - "--source"
+      - "https://artifactory.cloud.zf-world.com/artifactory/api/nuget/azp037-nuget-prod-local"
+      - "--no-progress"
+
+  getOtelCli:
+    command: "choco install"
+    args:
+      - "equinix.otel-cli"
+      - "-y"
+      - "--source"
+      - "https://artifactory.cloud.zf-world.com/artifactory/api/nuget/azp037-nuget-prod-local"
+      - "--no-progress"
+    deps:
+      - "~:getStackAnalyzer"
+
+  getLicense:
+    command: "python -m dpetasks.armstrong.stack_analysis"
+    args:
+      - "get-absint-license"
+    deps:
+      - "~:getOtelCli"
+
+  stackAnalysis:
+    command: "python -m dpetasks.armstrong.stack_analysis"
+    args:
+      - "run-stack-analysis"
+    deps:
+      - "~:getLicense"
+    outputs:
+      - "./05-IntegrationTest/Manual/ResourceAnalyses/Reports"
+    options:
+      runFromWorkspaceRoot: true

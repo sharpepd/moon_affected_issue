@@ -1,0 +1,72 @@
+# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
+# CENTRALLY MANAGED FILE.
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+# Tasks for a conan project that consumes Conan packages, but does not create
+# one.
+
+---
+$schema: "https://moonrepo.dev/schemas/tasks.json"
+extends: "./.conan-base.yml"
+
+fileGroups:
+  # public
+  conanHostProfile:
+    - "conan.profile"
+  conanBuildProfile:
+    - "windows"
+  conanHome:
+    - "/.conan/**/*"
+    - "!/.conan/**/p"
+  conanfile:
+    - "conanfile.txt"
+  conanOutputFolder:
+    - "build"
+  # private
+  conanInfo:
+    - "build/task-data/conanInfo.conan.json"
+
+tasks:
+  conanInstall:
+    extends: "conanBaseCommandJson"
+    args:
+      - install
+      - "@files(conanfile)"
+      - --output-folder
+      - "@group(conanOutputFolder)"
+      - "'-pr:h'"
+      - "@group(conanHostProfile)"
+      - "'-pr:b'"
+      - "@group(conanBuildProfile)"
+      - --build=missing
+      - --conf tools.env.virtualenv:powershell=true
+    outputs:
+      - build/**
+      - "@files(conanHome)"
+    options:
+      internal: false
+      cache: false
+    toolchain: python
+
+  conanInfo:
+    extends: "conanBaseCommandJson"
+    args:
+      - inspect
+      - "@files(conanfile)"
+    outputs:
+      - "@group(conanInfo)"
+    options:
+      internal: false
+      cache: true
+    toolchain: python

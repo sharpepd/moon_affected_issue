@@ -1,0 +1,12 @@
+id: workspace
+
+dependsOn:
+  - workspace
+
+fileGroups:
+  conanHostProfile:
+    - windows
+
+tags:
+  - conanSetup
+  - conanPackage

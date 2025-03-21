@@ -1,0 +1,65 @@
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+# Base moon tasks for conan command tasks.
+# There are:
+# - conanBaseCommandNoDep for general Conan commands that are not dependent on conan setup.
+# - conanBaseCommand for general Conan commands
+# - conanBaseCommandJson for commands requiring the json output in a file.
+# In both cases, add the args and change the internal option to true when extending these
+# tasks to perform a conan command.
+---
+fileGroups:
+  conanHome:
+    - "/.conan/**/*"
+    - "!/.conan/**/p"
+
+tasks:
+  conanBaseCommandNoDep:
+    command: "conan"
+    toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
+    env:
+      CONAN_HOME: $workspaceRoot/.conan
+    options:
+      internal: true
+      outputStyle: "stream"
+      cache: false
+      mutex: "conanHome"
+
+  conanBaseCommand:
+    extends: "conanBaseCommandNoDep"
+    toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
+    deps:
+      - "^:conanSetup"
+
+  # Users of this need to be aware that their additional inputs/outputs start at @in(1)/@out(1)
+  conanBaseCommandJson:
+    command: "python"
+    args:
+      - "-m"
+      - "dpetasks.armstrong.conan"
+      - "jsonw"
+      - "@out(0)"
+      - "--"
+    outputs:
+      - "build/task-data/$task.conan.json"
+    toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
+    env:
+      CONAN_HOME: $workspaceRoot/.conan
+    options:
+      internal: true
+      outputStyle: "buffer-only-failure"
+      cache: false
+      mutex: "conanHome"
+    deps:
+      - "^:conanSetup"

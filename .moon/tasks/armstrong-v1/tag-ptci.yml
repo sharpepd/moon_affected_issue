@@ -1,0 +1,54 @@
+# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
+# CENTRALLY MANAGED FILE.
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+# Tasks to use ptci
+---
+fileGroups:
+  # Private
+  builddata:
+    - "/build/task-data/builddata.json"
+
+tasks:
+  ptciStatusImplemented:
+    command: "python"
+    toolchain: "python"
+    args:
+      - "-m"
+      - "dpetasks.armstrong.ptci"
+      - "implemented"
+      - "-i"
+      - "@group(builddata)"
+    options:
+      runInCI: true
+      internal: true
+      cache: false
+    deps:
+      - "#buildManagement:registerBuild"
+
+  ptciStatusCiStatus:
+    command: "python"
+    toolchain: "python"
+    args:
+      - "-m"
+      - "dpetasks.armstrong.ptci"
+      - "ci-status"
+      - "-i"
+      - "@group(builddata)"
+    deps:
+      - "#buildManagement:registerBuild"
+    options:
+      runInCI: true
+      internal: true
+      cache: false

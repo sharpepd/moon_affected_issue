@@ -1,0 +1,79 @@
+# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
+# CENTRALLY MANAGED FILE.
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+# Tasks for build management (to be run on registration and completion events of
+# a complete pipeline).
+---
+$schema: "https://moonrepo.dev/schemas/tasks.json"
+fileGroups:
+  # Private
+  builddata:
+    - "/build/task-data/builddata.json"
+  buildEnvVars:
+    - "$BUILD_SOURCEVERSION"
+    - "$BUILD_REPOSITORY_ID"
+    - "$BUILD_BUILDID"
+    - "$BUILD_BUILDNUMBER"
+    - "$IQM_INTEGRATION_UUID"
+    - "$IQM_INTEGRATION_GROUP_ID"
+    - "$IQM_QUEUE_ID"
+    - "$SYSTEM_PULLREQUEST_PULLREQUESTID"
+    - "$SYSTEM_TEAMFOUNDATIONCOLLECTIONURI"
+    - "$SYSTEM_TEAMPROJECTID"
+    - "$INTEGRITY_USER"
+    - "$DPE_DRYRUN"
+    - "$CI"
+
+
+tasks:
+  initWs:
+    description: "Performs workspace set-up lifecycle task. Add dependencies to tasks that are needed to prepare the workspace."
+
+  buildRegister:
+    description: "Task to register the start of the build pipeline. "
+    command: python
+    args:
+      - "-m"
+      - "dpetasks.armstrong.buildm"
+      - "register"
+      - "-o"
+      - "@out(0)"
+    inputs:
+      - "@envs(buildEnvVars)"
+    outputs:
+      - "@group(builddata)"
+    deps:
+      - ~:initWs
+    options:
+      cache: true
+      runInCI: always
+
+    toolchain: python
+
+  buildComplete:
+    description: "Task to mark the build pipeline complete."
+    command: python
+    args:
+      - "-m"
+      - "dpetasks.armstrong.buildm"
+      - "complete"
+      - "--builddata"
+      - "@group(builddata)"
+    deps:
+      - "~:buildRegister"
+    options:
+      cache: false
+      runInCI: always
+    toolchain: python

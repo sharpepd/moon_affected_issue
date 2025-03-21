@@ -1,0 +1,27 @@
+---
+$schema: 'https://moonrepo.dev/schemas/project.json'
+
+project:
+  description: |
+    Project for upgrading the armstrong-v1 convention set of dpe-do.
+    See https://dpe-portal.zf-world.com/docs/default/Component/infr-dpe-do/user/dpecfg/#upgrading-the-convention-set.
+  metadata:
+    dpetplVersion: "0.25.0"
+
+tasks:
+  upgrade:
+    command: 'python -m dpetasks.armstrong.upgrade'
+    description: |
+      Upgrades the armstrong-v1 files to the latest versions.
+      Local modifications will be overwritten, but can manually be merged in
+      again.
+      Must be run from a clean working tree with a working moon configuration.
+    args:
+      - "--cwd"
+      - "$workspaceRoot"
+      - "--log-level"
+      - "INFO"
+      - "--non-interactive"
+    local: true
+    options:
+      cache: false

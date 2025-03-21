@@ -1,0 +1,160 @@
+# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
+# CENTRALLY MANAGED FILE.
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+# Tasks for a conan project that produces a package.
+---
+$schema: "https://moonrepo.dev/schemas/tasks.json"
+extends: "./tag-conanConsumer.yml"
+
+fileGroups:
+  # public
+  conanfile:
+    - "conanfile.py"
+  # private
+  conanCreateJson:
+    - "build/task-data/conanCreate.conan.json"
+  conanWriteArtProps:
+    - "build/task-data/conanWriteArtProps.json"
+  builddata:
+    - "/build/task-data/builddata.json"
+
+tasks:
+  conanBuild:
+    extends: "conanBaseCommandJson"
+    args:
+      - build
+      - "@files(conanfile)"
+      - --output-folder
+      - "@group(conanOutputFolder)"
+      - "'-pr:h'"
+      - "@group(conanHostProfile)"
+      - "'-pr:b'"
+      - "@group(conanBuildProfile)"
+      - "--build=missing"
+    outputs:
+      - build/**
+      - files(conanHome)
+    inputs:
+      - "@files(conanfile)"
+    toolchain: python
+    options:
+      internal: false
+    deps:
+      - conanInstall
+
+  conanGitVersionCheck:
+    command: python
+    args:
+      - "-m"
+      - "dpetasks.armstrong.versioning"
+      - "check"
+      - "--cwd"
+      - "$projectRoot"
+      - "--input-file"
+      - "@group(conanInfo)"
+      - "--remote"
+      - "origin"
+      - "--log-level"
+      - "DEBUG"
+    deps:
+      - conanInfo
+    options:
+      cache: false
+    toolchain: python
+
+  conanCreate:
+    extends: "conanBaseCommandJson"
+    args:
+      - create
+      - "@files(conanfile)"
+      - "'-pr:h'"
+      - "@group(conanHostProfile)"
+      - "'-pr:b'"
+      - "@group(conanBuildProfile)"
+      - "--build=missing"
+    outputs:
+      - build/**
+      - files(conanHome)
+    inputs:
+      - "@files(conanfile)"
+    toolchain: python
+    options:
+      internal: false
+      cache: false
+    deps:
+      - ~:conanGitVersionCheck
+
+  conanWriteArtProps:
+    command: python
+    args:
+      - "-m"
+      - "dpetasks.armstrong.conan"
+      - "write-art-props"
+      - "--input-file"
+      - "@group(builddata)"
+      - "--output"
+      - "@group(conanWriteArtProps)"
+    deps:
+      - ^:buildRegister
+      - ~:conanInfo
+    toolchain: python
+
+  conanDeployDev:
+    extends: "conanBaseCommand"
+    args:
+      - dpe:upload
+      - "-r"
+      - azp-037-test
+      - "-i"
+      - "@group(conanCreateJson)"
+      - "-p"
+      - "@group(conanWriteArtProps)"
+    deps:
+      - ~:conanCreate
+      - "#pipeline_dpe_v1:start_pipeline"
+      - ~:conanWriteArtProps
+    options:
+      internal: false
+    toolchain: python
+
+  conanGitVersionTag:
+    command: python
+    args:
+      - "-m"
+      - "dpetasks.armstrong.versioning"
+      - "tag"
+      - "--cwd"
+      - "$projectRoot"
+      - "--input-file"
+      - "@group(conanInfo)"
+      - "--remote"
+      - "origin"
+    deps:
+      - conanDeployProd
+      - conanInfo
+    options:
+      cache: false
+    toolchain: python
+
+
+  # TODO: For now same as conanDeployDev, but after Artifactory 7 is in place,
+  #       we need to change the repository
+  conanDeployQa:
+    extends: "conanDeployDev"
+    toolchain: python
+
+  conanDeployProd:
+    extends: "conanDeployDev"
+    toolchain: python
