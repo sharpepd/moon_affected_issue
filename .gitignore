@@ -3,3 +3,7 @@
 # moon
 .moon/cache
 .moon/docker
+
+.conan/
+
+build/
