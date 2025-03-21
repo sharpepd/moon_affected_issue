@@ -53,7 +53,7 @@ stages:
           - template: /apps/azpipelines/step-checkout-full.yml@dpe-do
           - template: /apps/azpipelines/step-install-moon.yml@dpe-do
 
-          - script: moon run :conanCreate --summary --logFile build/logs/moon/build.log
+          - script: moon run :publish --summary --logFile build/logs/moon/build.log
             displayName: "Perform the build tasks"
             env:
               SYSTEM_ACCESSTOKEN: $(System.AccessToken)
