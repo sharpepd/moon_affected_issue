@@ -30,6 +30,7 @@ tasks:
     toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
     env:
       CONAN_HOME: $workspaceRoot/.conan
+      ZF_CONAN_BASE_RECIPES_DISABLE_PROMPT: "1"
     options:
       internal: true
       outputStyle: "stream"
@@ -56,6 +57,7 @@ tasks:
     toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
     env:
       CONAN_HOME: $workspaceRoot/.conan
+      ZF_CONAN_BASE_RECIPES_DISABLE_PROMPT: "1"
     options:
       internal: true
       outputStyle: "buffer-only-failure"

@@ -1,0 +1,59 @@
+---
+trigger: none
+parameters:
+  - name: build_target
+    type: string
+    displayName: Provide the name of the moon target to be executed for the main build
+    default: ":conanBuild"
+  - name: mode
+    type: string
+    default: "ci"
+    values:
+      - run
+      - ci
+    displayName: Moon run mode
+  - name: dry_run
+    type: boolean
+    default: false
+    displayName: Enable dry run
+
+resources:
+  repositories:
+    - repository: _dpe-do
+      name: AZP-037_ADW_Tools/infr-dpe-do
+      type: git
+      ref: refs/heads/main
+
+stages:
+  - stage: build
+    variables:
+      - group: BuildUsers
+      - template: /apps/azpipelines/variable-moon.yml@_dpe-do
+      - name: DPE_DRYRUN
+        value: ${{ parameters.dry_run }}
+      - name: target
+        value: ${{ parameters.build_target }}
+      - name: moon_mode
+        value: ${{ parameters.mode }}
+    pool:
+      name: azp-037-software-factory-multicloud
+      demands:
+        - ZF_STARTFLEET_CONFIGURATION -equals openstack-mars-hco000100-windows
+    displayName: Build conan package
+    jobs:
+      - job: build
+        displayName: Build
+        steps:
+          - template: /apps/azpipelines/step-checkout-full.yml@_dpe-do
+          - template: /apps/azpipelines/step-install-moon.yml@_dpe-do
+          - template: /apps/azpipelines/step-git-config.yml@_dpe-do
+
+          - script: moon ${{ parameters.mode }} ${{ parameters.build_target }}
+            displayName: "Run moon target ${{ parameters.build_target }} in ${{ parameters.mode }} mode"
+            env:
+              SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+              INTEGRITY_PASSWORD: $(integrity_pw)
+              ARTIFACTORY_PW: $(ARTIFACTORY_PW)
+              build_database_token: $(build_database_token)
+
+          - template: /apps/azpipelines/step-snapshot-workspace.yml@_dpe-do

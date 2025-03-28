@@ -1,0 +1,10 @@
+fileGroups:
+  conanBuildProfile:
+    - conan.profile
+
+dependsOn:
+  - workspace
+
+tags:
+  - conanSetup
+  - conanPackage

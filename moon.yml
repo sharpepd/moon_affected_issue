@@ -9,19 +9,3 @@ fileGroups:
 
 tags:
   - conanSetup
-  - conanPackage
-
-tasks:
-  publish:
-    extends: "conanBaseCommand"
-    args:
-      - upload
-      - "-r"
-      - azp-037-test
-      - my_conan_package
-
-    deps:
-      - ~:conanCreate
-    options:
-      internal: false
-    toolchain: python
