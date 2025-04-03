@@ -1,5 +1,12 @@
 ---
-trigger: none
+trigger:
+  branches:
+    include:
+      - maint/*
+  paths:
+    include:
+      - conanfile.py
+      - docs/*
 parameters:
   - name: build_target
     type: string
