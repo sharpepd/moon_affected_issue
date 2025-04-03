@@ -14,6 +14,12 @@
 ---
 trigger: none
 
+pr:
+  paths:
+    exclude:
+      - docs/*
+      - packages/*/conanfile.py
+
 parameters:
   - name: dry_run
     type: boolean

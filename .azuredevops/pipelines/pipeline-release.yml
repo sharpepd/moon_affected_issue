@@ -5,7 +5,7 @@ trigger:
       - maint/*
   paths:
     include:
-      - conanfile.py
+      - packages/*/conanfile.py
       - docs/*
 parameters:
   - name: build_target
