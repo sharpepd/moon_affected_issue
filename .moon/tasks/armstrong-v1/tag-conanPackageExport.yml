@@ -54,7 +54,7 @@ tasks:
     inputs:
       - "@files(conanfile)"
       - "@files(conandata)"
-    toolchain: python
+    toolchain: conan
     options:
       internal: false
       outputStyle: "stream"
@@ -95,7 +95,7 @@ tasks:
     inputs:
       - "@files(conanfile)"
       - "@files(conandata)"
-    toolchain: python
+    toolchain: conan
     options:
       internal: false
       cache: false
@@ -133,7 +133,7 @@ tasks:
       - "@group(conanWriteArtProps)"
     options:
       internal: true
-    toolchain: python
+    toolchain: conan
 
   conanDeployDev:
     extends: "conanDeploy"
@@ -147,7 +147,7 @@ tasks:
       - ~:conanWriteArtProps
     options:
       internal: false
-    toolchain: python
+    toolchain: conan
 
   conanGitVersionTag:
     command: python
@@ -178,7 +178,7 @@ tasks:
       - ~:conanWriteArtProps
     options:
       internal: false
-    toolchain: python
+    toolchain: conan
 
   conanDeployProd:
     extends: "conanDeploy"
@@ -190,7 +190,7 @@ tasks:
       - ~:conanWriteArtProps
     options:
       internal: false
-    toolchain: python
+    toolchain: conan
 
   .registerPackage:
     command: python -m dpedo_armstrong.buildm register-build-artifacts

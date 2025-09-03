@@ -13,16 +13,6 @@ Just install moon and get going!
 
 # Dev Notes:
 
-In this commit we have updated to use the conan toolchain.
+In this commit I noted that the toolchain.yml was still also installing conan. So this is removed.
 
-Running `moon r app1:conanBuild` fails:
-
-```
-▪▪▪▪ app1:conanInstall
-python -m dpedo_armstrong.conan jsonw ./build/task-data/conanInstall.conan.json -- install ./conanfile.py --output-folder ./. '-pr:h' ./conan.profile '-pr:b' ./conan.profile '--build=missing' '--conf tools.env.virtualenv:powershell=powershell' (in .\packages\app1)
-app1:conanInstall | ERROR: Error reading './conan.profile' profile: Profile not found: windows
-▪▪▪▪ app1:conanInstall (2s 775ms)
-Error: task_runner::run_failed
-```
-
-The .conan folder exists but does not contain the conan config we specified in the toolchain.yml
+`moon r app1:conanBuild` still fails due to lack of conan profiles

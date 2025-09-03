@@ -23,10 +23,7 @@ python:
     installArgs:
       - "-i https://artifactory.cloud.zf-world.com/artifactory/api/pypi/azp037-pypi-virtual/simple"
       - "--isolated"
-      - conan==2.15.1
-      - cmake==3.30.3
       - dpedo_armstrong==0.3.2
-      - pre-commit==4.1.0
 
 conan:    
   plugin: "https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/moonrepo-plugins/conan_toolchain/canary/conan_toolchain.wasm"

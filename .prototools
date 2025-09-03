@@ -1,6 +1,7 @@
 moon = "~1.39"
 conan = "2.19.1"
 uv = "latest"
+cmake = "3.30.3"
 
 [settings]
 auto-install = true
