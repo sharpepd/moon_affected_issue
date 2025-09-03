@@ -27,14 +27,15 @@ tasks:
     args:
       - "--config"
       - "@group(preCommitConfig)"
-    options:
-      internal: true
     inputs:
       - '@group(preCommitConfig)'
+    options:
+      cache: false
+    toolchain: python
 
   clangConfig:
     description: Download .clang-format configuration file
-    command: curl
+    command: curl.exe
     args:
       - "-n"
       - "-O"
@@ -58,3 +59,4 @@ tasks:
       - clangConfig
     inputs:
       - '@group(preCommitConfig)'
+    toolchain: python

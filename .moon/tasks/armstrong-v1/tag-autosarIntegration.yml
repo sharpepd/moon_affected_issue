@@ -1,0 +1,93 @@
+# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
+# CENTRALLY MANAGED FILE.
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+$schema: "https://moonrepo.dev/schemas/tasks.json"
+
+extends:
+  - "./.ar-modelchecker-base.yml"
+  - "./.vector-tools-base.yml"
+
+fileGroups:
+  patchFile:
+    - "./BswWorkspace/patches.yml"
+
+tasks:
+  .patchTool:
+    command: zf-patch-tool.exe
+    args:
+      - "-i"
+      - group(patchFile)
+    options:
+      mergeArgs: append
+      internal: true
+
+  .escanChecks:
+    description: Provides a basic task to lint with Autosar Model Checker to check for supplier issues.
+    extends: .basicAutosarModelChecker
+    deps:
+      - ~:.setupRules
+    options:
+      mergeArgs: append
+      internal: true
+      mutex: lock
+    args:
+      - '@in(0)'
+      - -o
+      - "$env:CONAN_OUTPUT_FOLDER/autosar-modelchecker/escan"
+    inputs:
+      - "$CONAN_OUTPUT_FOLDER/autosar-modelchecker/rules"
+
+  .integrationChecks:
+    description: Provides a basic task to lint with Autosar Model Checker to check for integration design issues.
+    extends: .basicAutosarModelChecker
+    options:
+      mergeArgs: append
+      mutex: lock
+    args:
+      - "$env:INTEGRATION_AR_MODELCHECKER_RULES"
+      - -o
+      - "$env:CONAN_OUTPUT_FOLDER/autosar-modelchecker/integration"
+
+  autosarGenerate:
+    command: noop
+    deps:
+      - conanSetup
+      - .basicBswGeneration
+      - .patchTool
+    options:
+      internal: false
+      runDepsInParallel: false
+
+  autosarConfigure:
+    deps:
+      - conanSetup
+    extends: .configure
+    options:
+      internal: false
+
+  autosarVerify:
+    command: noop
+    deps:
+      - conanSetup
+      - .integrationChecks
+      - .escanChecks
+      - .mssv
+      - .vca
+      - .rteAnalyzer
+      - .sipModificationChecker
+      - .safetyCaseAnalysis
+    options:
+      allowFailure: true
+      runDepsInParallel: false

@@ -41,13 +41,15 @@ tasks:
   initWs:
     description: "Performs workspace set-up lifecycle task. Add dependencies to tasks that are needed to prepare the workspace."
 
-  buildRegister:
-    description: "Task to register the start of the build pipeline. "
+  buildData:
+    description: "Task to register the start of the build pipeline and collect project data into a json file."
     command: python
     args:
       - "-m"
-      - "dpetasks.armstrong.buildm"
+      - "dpedo_armstrong.buildm"
       - "register"
+      - "--pdb-project-id"
+      - "@meta(projectId)"
       - "-o"
       - "@out(0)"
     inputs:
@@ -59,15 +61,20 @@ tasks:
     options:
       cache: true
       runInCI: always
-
+      internal: true
     toolchain: python
+
+  buildRegister:
+    description: "Lifecycle task to register the start of the build pipeline."
+    deps:
+      - "~:buildData"
 
   buildComplete:
     description: "Task to mark the build pipeline complete."
     command: python
     args:
       - "-m"
-      - "dpetasks.armstrong.buildm"
+      - "dpedo_armstrong.buildm"
       - "complete"
       - "--builddata"
       - "@group(builddata)"

@@ -29,12 +29,10 @@ tasks:
       - config
       - install
       - --insecure
-      - "${env:conan_config_url}"
+      - "${env:DPE_CONAN_CONFIG_URL}"
     outputs:
       - "@files(conanHome)"
     toolchain: python
-    env:
-      conan_config_url: "https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/tools/conan/configs/dpe-conan2.zip"
 
   conanConfigGlobalConf:
     description: |
@@ -73,3 +71,16 @@ tasks:
     deps:
       - ~:conanConfigGlobalConf
       - ~:conanLogin
+
+  conanCacheClean:
+    extends: "conanBaseCommand"
+    description: |
+      Clean non-critical files from the local cache. Run occasionally to reduce disk space.
+    args:
+      - "cache"
+      - "clean"
+      - "*"
+    options:
+      cache: false
+      runInCI: false
+      internal: false

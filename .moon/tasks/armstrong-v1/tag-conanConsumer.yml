@@ -31,6 +31,8 @@ fileGroups:
     - "!/.conan/**/p"
   conanfile:
     - "conanfile.txt"
+  conandata:
+    - "conandata.yml"
   conanOutputFolder:
     - "build"
   # private
@@ -50,10 +52,11 @@ tasks:
       - "'-pr:b'"
       - "@group(conanBuildProfile)"
       - --build=missing
-      - --conf tools.env.virtualenv:powershell=true
+      - --conf tools.env.virtualenv:powershell=powershell
+    inputs:
+      - "@files(conandata)"
     outputs:
       - build/**
-      - "@files(conanHome)"
     options:
       internal: false
       cache: false
@@ -64,9 +67,11 @@ tasks:
     args:
       - inspect
       - "@files(conanfile)"
+    inputs:
+      - "@files(conandata)"
     outputs:
       - "@group(conanInfo)"
     options:
-      internal: false
+      internal: true
       cache: true
     toolchain: python

@@ -17,7 +17,7 @@
 # Use in extend keyword of the .moon/toolchain.yml in the repository.
 ---
 $schema: "https://moonrepo.dev/schemas/workspace.json"
-versionConstraint: ">=1.32.0"
+versionConstraint: ">=1.35.0"
 
 # No telemetry to the moon project
 telemetry: false
@@ -34,10 +34,11 @@ projects:
     - "."
     - "!.*/**/*/moon.yml" # No hidden folders shall be included
   sources:
-    upgrade: '.moon/armstrong-v1/upgrade'
+    upgrade: '.moon/armstrong-v1/dpe-do'
 
 generator:
   templates:
+    - https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/dpe/convention-sets/armstrong/dpetpl-latest.zip
     - git://dev.azure.com/SW4ZF/AZP-037_ADW_Tools/_git/PACK-Config-moontemplates#main
 
 vcs:

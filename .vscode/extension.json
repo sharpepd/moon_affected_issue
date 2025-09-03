@@ -1,0 +1,12 @@
+{
+    "recommendations": [
+        "ms-vscode.cmake-tools",
+        "ms-azure-devops.azure-pipelines",
+        "ms-vscode.cpptools",
+        "ms-vscode.cpptools-extension-pack",
+        "ms-vscode.cpptools-themes",
+        "davidanson.vscode-markdownlint",
+        "moonrepo.moon-console",
+        "streetsidesoftware.code-spell-checker"
+    ]
+}

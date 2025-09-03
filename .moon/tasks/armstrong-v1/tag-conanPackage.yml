@@ -29,6 +29,8 @@ fileGroups:
     - "build/task-data/conanWriteArtProps.json"
   builddata:
     - "/build/task-data/builddata.json"
+  conanOutputFolder:
+    - "."
 
 tasks:
   conanBuild:
@@ -45,9 +47,9 @@ tasks:
       - "--build=missing"
     outputs:
       - build/**
-      - files(conanHome)
     inputs:
       - "@files(conanfile)"
+      - "@files(conandata)"
     toolchain: python
     options:
       internal: false
@@ -58,7 +60,7 @@ tasks:
     command: python
     args:
       - "-m"
-      - "dpetasks.armstrong.versioning"
+      - "dpedo_armstrong.versioning"
       - "check"
       - "--cwd"
       - "$projectRoot"
@@ -86,9 +88,9 @@ tasks:
       - "--build=missing"
     outputs:
       - build/**
-      - files(conanHome)
     inputs:
       - "@files(conanfile)"
+      - "@files(conandata)"
     toolchain: python
     options:
       internal: false
@@ -100,30 +102,42 @@ tasks:
     command: python
     args:
       - "-m"
-      - "dpetasks.armstrong.conan"
+      - "dpedo_armstrong.conan"
       - "write-art-props"
       - "--input-file"
       - "@group(builddata)"
       - "--output"
+      - "@out(0)"
+    outputs:
       - "@group(conanWriteArtProps)"
+    options:
+      internal: false
     deps:
       - ^:buildRegister
       - ~:conanInfo
     toolchain: python
 
-  conanDeployDev:
+  conanDeploy:
     extends: "conanBaseCommand"
     args:
       - dpe:upload
-      - "-r"
-      - azp-037-test
       - "-i"
       - "@group(conanCreateJson)"
       - "-p"
       - "@group(conanWriteArtProps)"
+    options:
+      internal: true
+    toolchain: python
+
+  conanDeployDev:
+    extends: "conanDeploy"
+    args:
+      - "-r"
+      - azp037-conan-dev-local
+      - "-cc"
+      - "core.scm:local_url=allow"
     deps:
       - ~:conanCreate
-      - "#pipeline_dpe_v1:start_pipeline"
       - ~:conanWriteArtProps
     options:
       internal: false
@@ -133,7 +147,7 @@ tasks:
     command: python
     args:
       - "-m"
-      - "dpetasks.armstrong.versioning"
+      - "dpedo_armstrong.versioning"
       - "tag"
       - "--cwd"
       - "$projectRoot"
@@ -142,19 +156,75 @@ tasks:
       - "--remote"
       - "origin"
     deps:
-      - conanDeployProd
+      - registerConanProd
       - conanInfo
     options:
       cache: false
     toolchain: python
 
-
-  # TODO: For now same as conanDeployDev, but after Artifactory 7 is in place,
-  #       we need to change the repository
   conanDeployQa:
-    extends: "conanDeployDev"
+    extends: "conanDeploy"
+    args:
+      - "-r"
+      - azp037-conan-qa-local
+    deps:
+      - ~:conanCreate
+      - ~:conanWriteArtProps
+    options:
+      internal: false
     toolchain: python
 
   conanDeployProd:
-    extends: "conanDeployDev"
+    extends: "conanDeploy"
+    args:
+      - "-r"
+      - azp037-conan-prod-local
+    deps:
+      - ~:conanCreate
+      - ~:conanWriteArtProps
+    options:
+      internal: false
+    toolchain: python
+
+  .registerPackage:
+    command: python -m dpedo_armstrong.buildm register-build-artifacts
+    args:
+      - "--conan-info"
+      - "@group(conanCreateJson)"
+      - "--builddata"
+      - "@group(builddata)"
+      - "--package-type"
+      - "conan"
+      - "--promotion-level"
+    options:
+      internal: true
+    inputs:
+      - "@group(builddata)"
+      - "@group(conanCreateJson)"
+    deps:
+      - ^:buildRegister
+    toolchain: python
+
+  registerConanDev:
+    extends: ".registerPackage"
+    args:
+      - "dev"
+    deps:
+      - "conanDeployDev"
+    toolchain: python
+
+  registerConanQA:
+    extends: ".registerPackage"
+    args:
+      - "qa"
+    deps:
+      - "conanDeployQa"
+    toolchain: python
+
+  registerConanProd:
+    extends: ".registerPackage"
+    args:
+      - "prod"
+    deps:
+      - "conanDeployProd"
     toolchain: python

@@ -22,8 +22,8 @@ python:
   pip:
     installArgs:
       - "-i https://artifactory.cloud.zf-world.com/artifactory/api/pypi/azp037-pypi-virtual/simple"
-      - "--trusted-host repo-manager.emea.zf-world.com"
-      - conan==2.13.0
+      - "--isolated"
+      - conan==2.15.1
       - cmake==3.30.3
-      - dpesteps==0.16.3
+      - dpedo_armstrong==0.3.2
       - pre-commit==4.1.0

@@ -14,6 +14,8 @@
 #
 # ------------------------------------------------------------------------------
 # Tasks to use ptci
+# Dependent on buildManagement. This must be applied to a project that has the
+# buildManagement tag.
 ---
 fileGroups:
   # Private
@@ -26,7 +28,7 @@ tasks:
     toolchain: "python"
     args:
       - "-m"
-      - "dpetasks.armstrong.ptci"
+      - "dpedo_armstrong.ptci"
       - "implemented"
       - "-i"
       - "@group(builddata)"
@@ -35,19 +37,19 @@ tasks:
       internal: true
       cache: false
     deps:
-      - "#buildManagement:registerBuild"
+      - "~:buildRegister"
 
   ptciStatusCiStatus:
     command: "python"
     toolchain: "python"
     args:
       - "-m"
-      - "dpetasks.armstrong.ptci"
+      - "dpedo_armstrong.ptci"
       - "ci-status"
       - "-i"
       - "@group(builddata)"
     deps:
-      - "#buildManagement:registerBuild"
+      - "~:buildRegister"
     options:
       runInCI: true
       internal: true

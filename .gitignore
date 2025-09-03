@@ -5,5 +5,12 @@
 .moon/docker
 
 .conan/
+conan*.bat
+conan*.ps1
+conan*.sh
+deactivate_conan*.bat
+deactivate_conan*.ps1
+deactivate_conan*.sh
 
 build/
+

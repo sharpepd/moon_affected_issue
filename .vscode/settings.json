@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.env.windows": {
+        "CONAN_HOME": "${workspaceFolder}\\.conan"
+    },
+    "python.terminal.activateEnvironment": true
+}

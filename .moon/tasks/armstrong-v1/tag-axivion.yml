@@ -32,9 +32,10 @@ tasks:
       internal: true
       cache: false
     deps:
+      - conanBuild
       - ~:.axivionCheckInstallation
     env:
-      CONAN_OUTPUT_FOLDER: '@dirs(conanOutputFolder)'
+      CONAN_OUTPUT_FOLDER: '@group(conanOutputFolder)'
 
   axivionBuildAndTest:
     description: |
@@ -47,7 +48,7 @@ tasks:
     options:
       cache: false
     env:
-      CONAN_OUTPUT_FOLDER: '@dirs(conanOutputFolder)'
+      CONAN_OUTPUT_FOLDER: '@group(conanOutputFolder)'
       PYTHONDONTWRITEBYTECODE: "1"
       PROJECT_NAME: $project
       AXIVION_WORKSPACE_DATE: $datetime
@@ -65,9 +66,9 @@ tasks:
     args:
       - --rule RunnableAccessComplianceCheck
       - --ir
-      - "@files(axivionIrFile)"
+      - "@group(axivionIrFile)"
       - --input_rfg
-      - "@files(axivionRfgFile)"
+      - "@group(axivionRfgFile)"
       - --output_json "$CONAN_OUTPUT_FOLDER/axivion_report.json"
     toolchain: system
     inputs:
@@ -77,7 +78,7 @@ tasks:
       cache: false
       outputStyle: stream
     env:
-      CONAN_OUTPUT_FOLDER: '@dirs(conanOutputFolder)'
+      CONAN_OUTPUT_FOLDER: '@group(conanOutputFolder)'
       PYTHONDONTWRITEBYTECODE: "1"
       PROJECT_NAME: $project
       AXIVION_WORKSPACE_DATE: $datetime

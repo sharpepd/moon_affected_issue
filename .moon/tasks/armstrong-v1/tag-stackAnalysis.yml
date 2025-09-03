@@ -19,7 +19,7 @@ tasks:
   getStackAnalyzer:
     command: "choco install"
     args:
-      - "absint.stackanalyzer.2410"
+      - "absint.stackanalyzer.2504"
       - "-y"
       - "--source"
       - "https://artifactory.cloud.zf-world.com/artifactory/api/nuget/azp037-nuget-prod-local"
@@ -37,14 +37,14 @@ tasks:
       - "~:getStackAnalyzer"
 
   getLicense:
-    command: "python -m dpetasks.armstrong.stack_analysis"
+    command: "python -m dpedo_armstrong.stack_analysis"
     args:
       - "get-absint-license"
     deps:
       - "~:getOtelCli"
 
   stackAnalysis:
-    command: "python -m dpetasks.armstrong.stack_analysis"
+    command: "python -m dpedo_armstrong.stack_analysis"
     args:
       - "run-stack-analysis"
     deps:

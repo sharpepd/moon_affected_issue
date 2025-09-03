@@ -1,0 +1,23 @@
+{
+      "version": "0.2",
+      "language": "en",
+      "import": [
+            // Enable in future when we decide to keep the rules in artifactory . Below is the example file.
+            // "https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-dev-local/public/cspell.json"
+            ".moon\\armstrong-v1\\config\\cspell.json"
+      ],
+      //project specific rules
+      //words - a list of words to be considered correct.
+      //flagWords - a list of words to be always considered incorrect
+      //ignoreWords - a list of words to be ignored (even if they are in the flagWords).
+      //ignorePaths - a list of globs to specify which files are to be ignored.
+      "words": [],
+      "flagWords": [],
+      "ignorePaths": [
+            "cspell.json",
+            ".gitignore",
+            ".gitbugtraq",
+            ".prototools"
+            ],
+      "ignoreWords": []
+}

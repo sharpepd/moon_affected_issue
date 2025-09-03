@@ -1,0 +1,90 @@
+# ------------------------------------------------------------------------------
+#
+#    ZF Friedrichshafen AG owns the copyright in this document and associated
+#    documents and all rights are reserved.  These documents must
+#    not be used for any purpose other than that for which they
+#    are supplied and must not be copied in whole or in part or
+#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
+#    Any copy of this drawing or document made by any method
+#    must also include a copy of this legend.
+#
+#    (C) ZF Friedrichshafen AG 2025
+#
+# ------------------------------------------------------------------------------
+# Python project using UV
+---
+$schema: 'https://moonrepo.dev/schemas/tasks.json'
+
+fileGroups:
+  src:
+    - "src/**/*.py"
+
+  projectConfig:
+    - "pyproject.toml"
+    - "uv.lock"
+
+tasks:
+
+  bump:
+    command: uv run python -m dpedo_armstrong.python
+    args:
+      - bump
+      - "--cwd"
+      - "$projectRoot"
+    inputs:
+      - "@files(projectConfig)"
+      - "@files(src)"
+    outputs:
+      - build/task-data/python-build-info.json
+    toolchain: python
+    options:
+      cache: false #TODO Can we find a way to enable cache this and still get required behavior in pipeline?
+      internal: true
+
+  build:
+    command: uv build --out-dir dist
+    description: Build the project
+    inputs:
+      - "@files(src)"
+      - "@files(projectConfig)"
+
+    outputs:
+      - "dist/*.whl"
+      - "dist/*.tar.gz"
+    toolchain: python
+    deps:
+      - bump
+
+  test:
+    command: uv run python -m pytest
+    args:
+      - "--junitxml=build/test-results/TEST-unittest.xml"
+      - "--cov=."
+      - "--cov-report=xml:build/test-results/coverage.xml"
+      - "--cov-report=html:build/test-results/htmlcov"
+      - "./tests"
+    description: Test the project
+    inputs:
+      - "tests/**/*.py"
+    outputs:
+      - "build/test-results/TEST-unittest.xml"
+      - "build/test-results/coverage.xml"
+    toolchain: python
+    deps:
+      - build
+
+  publish:
+    command: uv run python -m dpedo_armstrong.python
+    args:
+      - publish
+      - "--cwd"
+      - "$projectRoot"
+    toolchain: python
+    inputs:
+      - "dist/dpesteps-*.whl"
+      - "dist/dpesteps-*.tar.gz"
+      - build/task-data/python-build-info.json
+    deps:
+      - build
+      # TODO test only needs to be done in PR - so this should be removed when we do a ci mode.
+      - test
