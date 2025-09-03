@@ -60,7 +60,9 @@ tasks:
     options:
       internal: false
       cache: false
-    toolchain: conan
+    toolchain:
+      - python
+      - conan
 
   conanInfo:
     extends: "conanBaseCommandJson"
@@ -74,4 +76,6 @@ tasks:
     options:
       internal: true
       cache: true
-    toolchain: conan
+    toolchain: 
+      - python
+      - conan
