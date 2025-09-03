@@ -43,7 +43,7 @@ tasks:
   conanBaseCommandNoDep:
     extends: conanEnv
     command: "conan"
-    toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
+    toolchain: conan #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
     options:
       outputStyle: "stream"
       cache: false
@@ -51,7 +51,7 @@ tasks:
 
   conanBaseCommand:
     extends: "conanBaseCommandNoDep"
-    toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
+    toolchain: conan #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
     deps:
       - "^:conanSetup"
 
@@ -67,7 +67,7 @@ tasks:
       - "--"
     outputs:
       - "build/task-data/$task.conan.json"
-    toolchain: python #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
+    toolchain: conan #TODO this is not currently exported when extends. Issue raised: https://github.com/moonrepo/moon/issues/1693
     options:
       outputStyle: "buffer-only-failure"
       cache: false
