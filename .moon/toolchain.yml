@@ -27,3 +27,8 @@ python:
       - cmake==3.30.3
       - dpedo_armstrong==0.3.2
       - pre-commit==4.1.0
+
+conan:    
+  plugin: "https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/moonrepo-plugins/conan_toolchain/canary/conan_toolchain.wasm"
+  configDistUrl: https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/tools/conan/configs/dpe-conan2-v1.zip
+  workspaceIsConanHome: true

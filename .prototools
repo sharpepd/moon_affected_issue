@@ -1,4 +1,6 @@
 moon = "~1.39"
+conan = "2.19.1"
+uv = "latest"
 
 [settings]
 auto-install = true

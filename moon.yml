@@ -1,11 +1,2 @@
 id: workspace
-
-dependsOn:
-  - workspace
-
-fileGroups:
-  conanHostProfile:
-    - windows
-
-tags:
-  - conanSetup
+language: none
