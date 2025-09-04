@@ -7,4 +7,4 @@ fileGroups:
 
 tags:
   - conanSetup
-  - conanPackage
+  - conanPackageExport
