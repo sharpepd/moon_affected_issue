@@ -32,7 +32,7 @@ tasks:
       - "${env:DPE_CONAN_CONFIG_URL}"
     outputs:
       - "@files(conanHome)"
-    toolchain: python
+    toolchain: conan
 
   conanConfigGlobalConf:
     description: |
@@ -56,7 +56,7 @@ tasks:
     args:
       - 'remote'
       - 'login *'
-    toolchain: python
+    toolchain: conan
     inputs:
       - "/.conan/remotes.json"
     options:

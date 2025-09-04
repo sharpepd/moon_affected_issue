@@ -41,7 +41,7 @@ fileGroups:
 
 tasks:
   conanInstall:
-    extends: "conanBaseCommandJson"
+    extends: "conanBaseCommand"
     args:
       - install
       - "@files(conanfile)"
@@ -52,30 +52,36 @@ tasks:
       - "'-pr:b'"
       - "@group(conanBuildProfile)"
       - --build=missing
+      - "--out-file"
+      - "@out(0)"
+      - "-f"
+      - "json"
       - --conf tools.env.virtualenv:powershell=powershell
     inputs:
       - "@files(conandata)"
     outputs:
+      - "./build/task-data/$task.conan.json"
       - build/**
     options:
       internal: false
       cache: false
-    toolchain:
-      - python
-      - conan
+    toolchain: conan
 
   conanInfo:
-    extends: "conanBaseCommandJson"
+    extends: "conanBaseCommand"
     args:
       - inspect
       - "@files(conanfile)"
+      - "--out-file"
+      - "@out(0)"
+      - "-f"
+      - "json"
     inputs:
       - "@files(conandata)"
     outputs:
+      - "./build/task-data/$task.conan.json"
       - "@group(conanInfo)"
     options:
       internal: true
       cache: true
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan

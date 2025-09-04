@@ -34,7 +34,7 @@ fileGroups:
 
 tasks:
   conanBuild:
-    extends: "conanBaseCommandJson"
+    extends: "conanBaseCommand"
     args:
       - build
       - "@files(conanfile)"
@@ -45,16 +45,20 @@ tasks:
       - "'-pr:b'"
       - "@group(conanBuildProfile)"
       - "--build=missing"
+      - "--out-file"
+      - "@out(0)"
+      - "-f"
+      - "json"
     outputs:
+      - "./build/task-data/$task.conan.json"
       - build/**
     inputs:
       - "@files(conanfile)"
       - "@files(conandata)"
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan
     options:
       internal: false
+      outputStyle: "stream"
     deps:
       - conanInstall
 
@@ -79,7 +83,7 @@ tasks:
     toolchain: python
 
   conanCreate:
-    extends: "conanBaseCommandJson"
+    extends: "conanBaseCommand"
     args:
       - create
       - "@files(conanfile)"
@@ -88,14 +92,17 @@ tasks:
       - "'-pr:b'"
       - "@group(conanBuildProfile)"
       - "--build=missing"
+      - "--out-file"
+      - "@out(0)"
+      - "-f"
+      - "json"
     outputs:
+      - "./build/task-data/$task.conan.json"
       - build/**
     inputs:
       - "@files(conanfile)"
       - "@files(conandata)"
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan
     options:
       internal: false
       cache: false
@@ -131,9 +138,7 @@ tasks:
       - "@group(conanWriteArtProps)"
     options:
       internal: true
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan
 
   conanDeployDev:
     extends: "conanDeploy"
@@ -147,9 +152,7 @@ tasks:
       - ~:conanWriteArtProps
     options:
       internal: false
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan
 
   conanGitVersionTag:
     command: python
@@ -180,9 +183,7 @@ tasks:
       - ~:conanWriteArtProps
     options:
       internal: false
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan
 
   conanDeployProd:
     extends: "conanDeploy"
@@ -194,9 +195,7 @@ tasks:
       - ~:conanWriteArtProps
     options:
       internal: false
-    toolchain: 
-      - python
-      - conan
+    toolchain: conan
 
   .registerPackage:
     command: python -m dpedo_armstrong.buildm register-build-artifacts
