@@ -22,6 +22,8 @@
 # yamllint disable rule:line-length
 # cSpell:ignore taskinglm
 ---
+extends: "./.tools-install.yml"
+
 fileGroups:
   conanHome:
     - "/.conan/**/*"
@@ -39,6 +41,8 @@ tasks:
       TASKING_LICENSE_FILE: "7594@tasking.zf-world.com"
     options:
       internal: true
+    deps:
+      - "~:.installTools"
 
   conanBaseCommandNoDep:
     extends: conanEnv

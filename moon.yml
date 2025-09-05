@@ -1,2 +1,5 @@
 id: workspace
 language: none
+
+tags:
+  - conanSetup

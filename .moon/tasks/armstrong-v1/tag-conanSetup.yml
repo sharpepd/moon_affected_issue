@@ -10,7 +10,7 @@
 #    Any copy of this drawing or document made by any method
 #    must also include a copy of this legend.
 #
-#    (C) ZF Friedrichshafen AG 2024
+#    (C) ZF Friedrichshafen AG 2025
 #
 # ------------------------------------------------------------------------------
 # Tasks to setup/configure conan
@@ -20,57 +20,14 @@ $schema: "https://moonrepo.dev/schemas/tasks.json"
 extends: "./.conan-base.yml"
 
 tasks:
-  conanConfigInstall:
-    extends: "conanBaseCommandNoDep"
-    description: |
-      Performs the Conan configuration install.
-      If a different config package is required, then override the environment variable in the project.
-    args:
-      - config
-      - install
-      - --insecure
-      - "${env:DPE_CONAN_CONFIG_URL}"
-    outputs:
-      - "@files(conanHome)"
-    toolchain: conan
-
-  conanConfigGlobalConf:
-    description: |
-      Sets the place where the Conan package cache is stored to be the default location.
-      This is necessary to avoid the cache being stored in the workspace, which is where we
-      store the conan configuration by default, to allow project specific variation.
-      - TODO: Make this cross-platform. Currently only works on Windows.
-    script: 'Add-Content -Path @in(0) -Value $("`n" + "core.cache:storage_path=${env:USERPROFILE}\.conan2\p") -Encoding ASCII'
-    inputs:
-      - "/.conan/global.conf"
-    outputs:
-      - "/.conan/*.conf"
-    deps:
-      - ~:conanConfigInstall
-    options:
-      mutex: "conanHome"
-      internal: true
-
-  conanLogin:
-    extends: conanBaseCommandNoDep
-    args:
-      - 'remote'
-      - 'login *'
-    toolchain: conan
-    inputs:
-      - "/.conan/remotes.json"
-    options:
-      internal: true
-    deps:
-      - ~:conanConfigInstall
 
   conanSetup:
     description: |
-      Setup Conan
-      Main task to run/be dependent on to setup Conan.
+      Deprecated set-up task. Replaced by moon conan plugin.
+      See https://dpe-portal.zf-world.com/docs/default/component/tool-moonrepo-plugins/tools/.
     deps:
-      - ~:conanConfigGlobalConf
-      - ~:conanLogin
+      - "~:.installTools"
+
 
   conanCacheClean:
     extends: "conanBaseCommand"
@@ -84,3 +41,4 @@ tasks:
       cache: false
       runInCI: false
       internal: false
+    toolchain: conan

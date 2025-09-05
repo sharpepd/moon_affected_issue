@@ -9,4 +9,3 @@ default-registry = "artifactory.cloud.zf-world.com"
 registries = [
   { registry = "artifactory.cloud.zf-world.com", namespace = "azp037-oci-prod-local/moonrepo" },
 ]
-
