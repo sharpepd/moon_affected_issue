@@ -1,13 +1,27 @@
 id: workspace
 language: none
-
 tasks:
-  foo:
-    description: "This is a foo task"
+  bar:
+    description: This is a bar task
     script: |
-      md build
-      echo "Running foo task">build/foo.txt
+      echo "Running bar task"
+      exit 0
     inputs:
-      - input.txt
-    outputs:
-      - build/foo.txt
+    - '**/*'
+  foo:
+    description: This is a foo task
+    script: |
+      echo "Running foo task"
+    inputs:
+    - input.txt
+    deps:
+    - bar
+  bar2:
+    description: This is a bar2 task
+    script: |
+      echo "Running bar2 task"
+      exit 0
+    inputs:
+    - '**/*'
+    deps:
+    - foo

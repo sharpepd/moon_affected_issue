@@ -1,43 +1,16 @@
-# DO NOT MODIFY WITHOUT AGREEMENT WITH DPE-DO OWNERS
-# CENTRALLY MANAGED FILE.
-# ------------------------------------------------------------------------------
-#
-#    ZF Friedrichshafen AG owns the copyright in this document and associated
-#    documents and all rights are reserved.  These documents must
-#    not be used for any purpose other than that for which they
-#    are supplied and must not be copied in whole or in part or
-#    disclosed to others without prior written consent of ZF Friedrichshafen AG.
-#    Any copy of this drawing or document made by any method
-#    must also include a copy of this legend.
-#
-#    (C) ZF Friedrichshafen AG 2025
-#
-# ------------------------------------------------------------------------------
-# Workspace file armstrong-v1
-# Use in extend keyword of the .moon/toolchain.yml in the repository.
----
-$schema: "https://moonrepo.dev/schemas/workspace.json"
-versionConstraint: ">=1.35.0"
-
-# No telemetry to the moon project
+$schema: https://moonrepo.dev/schemas/workspace.json
+versionConstraint: '>=1.35.0'
 telemetry: false
-
-runner:
-  # Always log the command so consumers understand what's happening.
-  logRunningCommand: true
-
-# Note that projects is not mergeable, so if this is not suitable for a project, it shall
-# be redefined fully.
+vcs:
+  provider: other
+  defaultBranch: main
+  client: git
 projects:
   globs:
-    - "."
-
+  - .
 generator:
   templates:
-    - https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/dpe/convention-sets/armstrong/dpetpl-latest.zip
-    - git://dev.azure.com/SW4ZF/AZP-037_ADW_Tools/_git/PACK-Config-moontemplates#main
-
-vcs:
-  manager: "git"
-  defaultBranch: "main"
-  provider: other
+  - https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/dpe/convention-sets/armstrong/dpetpl-latest.zip
+  - git://dev.azure.com/SW4ZF/AZP-037_ADW_Tools/_git/PACK-Config-moontemplates#main
+pipeline:
+  logRunningCommand: true

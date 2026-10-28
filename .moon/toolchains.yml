@@ -1,0 +1,13 @@
+$schema: https://moonrepo.dev/schemas/toolchain.json
+
+unstable_python:
+  version: 3.11
+unstable_pip:
+  installArgs:
+  - -i https://artifactory.cloud.zf-world.com/artifactory/api/pypi/azp037-pypi-virtual/simple
+  - --isolated
+  - dpedo_armstrong==0.3.2
+conan:
+  plugin: https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/moonrepo-plugins/conan_toolchain/canary/conan_toolchain.wasm
+  configDistUrl: https://artifactory.cloud.zf-world.com/artifactory/azp037-generic-prod-local/public/tools/conan/configs/dpe-conan2-v1.zip
+  workspaceIsConanHome: true

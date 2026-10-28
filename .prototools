@@ -1,4 +1,4 @@
-moon = "1.41.8"
+moon = "latest"
 uv = "latest"
 cmake = "3.30.3"
 python = "3.11.10"
