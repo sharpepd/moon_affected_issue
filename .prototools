@@ -1,4 +1,4 @@
-moon = "~1.39"
+moon = "1.41.8"
 uv = "latest"
 cmake = "3.30.3"
 python = "3.11.10"
@@ -6,7 +6,6 @@ conan = "2.19.1"
 
 [settings]
 auto-install = true
-default-registry = "artifactory.cloud.zf-world.com"
 registries = [
-  { registry = "artifactory.cloud.zf-world.com", namespace = "azp037-oci-prod-local/moonrepo" },
+  { registry = "artifactory.cloud.zf-world.com", namespace = "azp037-oci-prod-local/moonrepo", default=true },
 ]

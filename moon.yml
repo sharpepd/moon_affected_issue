@@ -1,5 +1,13 @@
 id: workspace
 language: none
 
-tags:
-  - conanSetup
+tasks:
+  foo:
+    description: "This is a foo task"
+    script: |
+      md build
+      echo "Running foo task">build/foo.txt
+    inputs:
+      - input.txt
+    outputs:
+      - build/foo.txt
