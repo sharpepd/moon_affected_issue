@@ -1,27 +1,37 @@
 id: workspace
 language: none
 tasks:
-  bar:
+  A:
     description: This is a bar task
     script: |
-      echo "Running bar task"
-      exit 0
+      echo "Running bar task" > bar.txt
     inputs:
-    - '**/*'
-  foo:
+      - '.prototools'
+    outputs:
+      - 'bar.txt'
+    options:
+      windowsShell: bash
+      # cache: false
+  B:
     description: This is a foo task
     script: |
       echo "Running foo task"
     inputs:
     - input.txt
+    - bar.txt
     deps:
-    - bar
-  bar2:
+    - A
+    options:
+      windowsShell: bash
+      # cache: false
+  C:
     description: This is a bar2 task
     script: |
       echo "Running bar2 task"
-      exit 0
     inputs:
-    - '**/*'
+    - 'README.md'
     deps:
-    - foo
+    - B
+    options:
+      windowsShell: bash
+      # cache: false
